@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>Yeğenlerim Kronoloji</title>
+    <style>
+	
+	html {
+    touch-action: none;
+    -ms-touch-action: none;
+    touch-action: manipulation;
+}
+
+	
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 960px;
+            margin: 0 auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 50px;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        td {
+            border: none;
+        }
+        .new-button {
+       position:fixed;
+        padding:20px; 
+		right:210px;
+		top:105px;
+           z-index: 1000;
+            border:none;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #28a745;
+            color: white;
+        }
+		.new-button:hover{
+             position:fixed;
+        padding:20px; 
+		right:210px;
+		top:105px;
+           z-index: 1000;
+            border:none;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #28a745;
+            color: white;
+          }
+		  .new-button:active{
+             position:fixed;
+        padding:20px; 
+		right:210px;
+		top:105px;
+           z-index: 1000;
+            border:none;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #28a745;
+            color: white;
+		  
+        }
+        .action-button {
+            padding: 5px 10px;
+            margin: 2px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .edit-button {
+            background-color: #007bff;
+            color: white;
+        }
+        .delete-button {
+            background-color: #dc3545;
+            color: white;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            right: 0;
+            bottom: 0;
+            width: 300px;
+            background-color: rgba(0,0,0,0.4);
+            padding: 0px;
+            border-radius: 10px;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            padding: 20px;
+            border: 1px solid #888;
+            border-radius: 10px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .modal-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .save-close-button {
+            background-color: #28a745;
+            color: white;
+        }
+        .discard-close-button {
+            background-color: #dc3545;
+            color: white;
+        }
+        .return-edit-button {
+            background-color: #ffc107;
+            color: white;
+        }
+        .toast {
+            visibility: hidden;
+            min-width: 200px; filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.5));
+            margin-left: -125px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 2px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            right: 10px;
+            bottom: 30px;
+            font-size: 17px;
+			
+        }
+        .toast.show {
+            visibility: visible;
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+        @-webkit-keyframes fadein {
+            from {bottom: 0; opacity: 0;} 
+            to {bottom: 30px; opacity: 1;}
+        }
+        @keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
+        }
+        @-webkit-keyframes fadeout {
+            from {bottom: 30px; opacity: 1;} 
+            to {bottom: 0; opacity: 0;}
+        }
+        @keyframes fadeout {
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 0; opacity: 0;}
+        }
+        .resizable {
+            resize: both;
+            overflow: auto;
+        }
+        .confirm-modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            right: 1275px;
+            bottom: 10px;
+            width: 250px;
+            background-color: rgba(0,0,0,0.4);
+            padding: 0px;
+            border-radius: 10px;
+			}
+			
+			
+        
+        .confirm-modal-content {
+            background-color: #fefefe;
+            padding: 20px;
+            border: 0px solid #888; filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.5));
+            border-radius: 10px;
+        }
+        .confirm-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .confirm-yes {
+            background-color: #dc3545;
+            color: white;
+        }
+		
+		.confirm-yes:hover {
+            background-color: #dc3545;  filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.5));
+            color: black;
+			
+        }
+		
+		.confirm-no:hover {
+            background-color: #28a745;  filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.5));
+            color: black;
+			
+        }
+		
+		
+        .confirm-no {
+            background-color: #28a745;
+            color: white;
+        }
+        .undo-toast {
+            visibility: hidden;
+            min-width: 250px;
+            margin-left: -125px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 2px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            right: 30px;
+            top: 50px;
+            font-size: 17px;
+            outline: none;
+            box-shadow: none;
+            border: none;
+            background: transparent;
+            color: inherit;
+            padding: 0;
+            margin: 0;
+        }
+        .undo-toast:hover {
+            color: red;
+        }
+      
+        .undo-toast.show {
+            visibility: visible;
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 8.5s;
+            animation: fadein 0.5s, fadeout 0.5s 8.5s;
+        }
+        .row-light {
+            background-color: #e0f7fa;
+        }
+        .row-dark {
+            background-color: #b2ebf2;
+        }
+		.menu {
+    background: #eee;
+    border-radius: 10px;
+    width: auto;
+    margin-bottom: -20px;a {
+    text-decoration: none;
+	
+}
+
+}
+
+.menu > ul { 
+    display: flex;
+    align-items: center;
+    height: 60px;
+    padding: 0 10px;
+	
+}
+
+.menu > ul > li {margin: 0 auto;
+    position: relative;
+    height: 60px;
+    display: flex;
+    align-items: center;
+}
+
+.menu > ul > li > a {
+    display: block;
+    height: 40px;
+    line-height: 40px;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 0 15px;
+    color: #333;
+    border-radius: 40px;
+}
+
+
+
+
+.menu > ul > li[data-dropdown] > a::after {
+    content: "\f085";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    margin-left: 5px;
+    color: #999;
+    transition: 300ms all;
+    display: inline-block;
+	
+}
+
+
+
+.menu ul .dropdown {
+    position: absolute;
+    top: 60px;
+    left: 50%;
+    padding-top: 10px;
+    width: 200px;
+    margin-left: -100px;
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0);
+    transition: 300ms all;
+}
+
+.menu ul .dropdown::before {
+    content: '';
+    border: 8px solid transparent;
+    border-bottom-color: #f5f5f5;
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    margin-left: -12px;
+}
+
+.menu ul .dropdown ul {
+    background: #f5f5f5;
+    border-radius: 10px;
+    padding: 7px 0;
+}
+
+.menu ul .dropdown ul li a {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 34px;
+    padding: 0 15px;
+    border-radius: 34px;
+    color: #555;
+}
+
+.menu ul .dropdown ul li {
+    position: relative;
+    padding: 0 7px;
+}
+
+.menu ul .dropdown ul li:hover > a {
+    background: #fff;
+    color: #000;
+}
+
+.menu > ul > li:hover > a::after {
+    transform: rotate(180deg);
+}
+
+.menu > ul > li:hover > a {
+    background: #fff;
+}
+
+.menu > ul > li:hover > a + .dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+}
+
+.menu ul .dropdown .dropdown {
+    left: 190px;
+    top: 0;
+    padding-left: 20px;
+    margin-left: 0;
+    padding-top: 0;
+}
+
+.menu ul .dropdown ul li:hover > .dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+}
+
+.menu ul .dropdown .dropdown::before {
+    border-bottom-color: transparent;
+    border-right-color: #f5f5f5;
+    top: 10px;
+    left: 4px;
+    margin-left: 0;
+}
+
+.menu ul .dropdown li[data-dropdown] > a::after {
+    content: "\f008";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    margin-left: 10px;
+    color: #999;
+    display: inline-block;
+    transition: 500ms all;
+}
+
+
+
+
+.menu ul .dropdown li[data-dropdown]:hover > a::after {
+    transform: rotate(-180deg);
+}
+
+
+
+		
+    </style>
+</head>
+<body>
+<center>
+<nav class="menu">
+	<ul>
+		
+		<li>
+			<a href="#">
+				Anasayfa
+			</a>
+		</li>
+		<li >
+			<a href="#">
+				Galeri
+			</a>
+		</li>
+		
+		
+		<li class= "arac" data-dropdown>
+			<a href="#">
+				Araçlar
+			</a>
+			<div class="dropdown">
+				<ul>
+					<li>
+						<a href="#">
+							Profil
+						</a>
+					</li>
+					<li data-dropdown>
+						<a href="#">
+							PHP Dersleri
+						</a>
+						<div class="dropdown">
+							<ul>
+								<li>
+									<a href="#">Giriş</a>
+								</li>
+								<li data-dropdown>
+									<a href="#">Fonksiyonlar</a>
+									<div class="dropdown">
+										<ul>
+											<li>
+												<a href="#">Dizi Fonksiyonları</a>
+											</li>
+											<li>
+												<a href="#">Tanımı</a>
+											</li>
+											<li>
+												<a href="#">Hanımı</a>
+											</li>
+										</ul>
+									</div>
+								</li>
+								<li>
+									<a href="#">OOP</a>
+								</li>
+								<li>
+									<a href="#">Veritabanı</a>
+								</li>
+							</ul>
+						</div>
+					</li>
+					<li>
+						<a href="recycle-bin.html">
+							Geri Dönüşüm Kutusu
+						</a>
+					</li>
+					<li>
+						<a href="#">
+							Kullanma Kılavuzu
+						</a>
+					</li>
+				</ul>
+			</div>
+		</li>
+		
+		
+		
+		<li>
+			<a href="#">
+				Adres Geçmişi
+			</a>
+		</li>
+		<li>
+			<a href="#">
+				Kronoloji
+			</a>
+		</li>
+		
+	</ul>
+</nav>
+</center>
+<button class="new-button" onclick="addRow()">Yeni</button>
+    <table  id="eventTable">
+	
+        <thead>
+            <tr>
+               
+                <th>SIRA</th>
+                <th>TARİH</th>
+                <th>SAAT</th>
+                <th>OLAY ÖNEMİ</th>
+                <th>NOT</th>
+                <th>İŞLEMLER</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Satırlar buraya eklenecek -->
+        </tbody>
+    </table>
+
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">×</span>
+            <p>Değişiklikler kaydedilmedi!</p>
+            <button class="modal-button discard-close-button" onclick="discardAndClose()">Kaydetme ve Kapat</button>
+            <button class="modal-button save-close-button" onclick="saveAndClose()">Kaydet ve Kapat</button>
+            <button class="modal-button return-edit-button" onclick="returnToEdit()">Düzenlemeye Geri Dön</button>
+        </div>
+    </div>
+
+    <div id="confirmModal" class="confirm-modal">
+        <div class="confirm-modal-content">
+            <p id="confirmMessage"></p>
+            <button class="confirm-button confirm-yes" onclick="deleteConfirmed()">Evet</button>
+            <button class="confirm-button confirm-no" onclick="cancelDelete()">Hayır</button>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+    <div id="undoToast" class="undo-toast">
+        <span id="undoMessage"></span>
+        <button class="butonhover" onclick="undoDelete()">Geri Al</button>
+    </div>
+
+    <script>
+        let rowCount = 0;
+        let isEditing = false;
+        let hasChanges = false;
+        let rowToDelete = null;
+        let lastDeletedRow = null;
+        let lastDeletedRowIndex = null;
+
+        function addRow() {
+            rowCount++;
+            const table = document.getElementById('eventTable').getElementsByTagName('tbody')[0];
+            const newRow = table.insertRow();
+            newRow.className = rowCount % 2 === 0 ? 'row-light' : 'row-dark';
+            newRow.innerHTML = `
+                <td>${rowCount}</td>
+                               <td><input type="date" id="date${rowCount}" name="date${rowCount}" disabled></td>
+                <td><input type="time" id="time${rowCount}" name="time${rowCount}" disabled></td>
+                <td><input type="text" id="importance${rowCount}" name="importance${rowCount}" class="resizable" disabled></td>
+                <td><input type="text" id="note${rowCount}" name="note${rowCount}" class="resizable" disabled></td>
+                <td>
+                    <button class="action-button edit-button" onclick="editRow(this)">Değiştir</button>
+                    <button class="action-button delete-button" onclick="confirmDelete(this)">Sil</button>
+                </td>
+            `;
+            showToast('Yeni satır oluşturuldu!', 'success');
+        }
+
+        function editRow(button) {
+            const row = button.parentElement.parentElement;
+            const inputs = row.getElementsByTagName('input');
+            isEditing = true;
+            hasChanges = true;
+            for (let input of inputs) {
+                input.disabled = false;
+                if (input.type === 'text') {
+                    input.classList.add('resizable');
+                }
+            }
+            button.textContent = 'Kaydet';
+            button.onclick = () => saveRow(button);
+        }
+
+        function saveRow(button) {
+            const row = button.parentElement.parentElement;
+            const inputs = row.getElementsByTagName('input');
+            isEditing = false;
+            hasChanges = false;
+            for (let input of inputs) {
+                input.disabled = true;
+                if (input.type === 'text') {
+                    input.classList.remove('resizable');
+                }
+            }
+            button.textContent = 'Değiştir';
+            button.onclick = () => editRow(button);
+            saveData();
+        }
+
+        function confirmDelete(button) {
+            rowToDelete = button.parentElement.parentElement;
+            const rowIndex = rowToDelete.rowIndex;
+            const importance = rowToDelete.getElementsByTagName('input')[2].value;
+            document.getElementById('confirmMessage').textContent = `Dikkat! Sıra ${rowIndex} silmek istediğinize emin misiniz?`;
+            document.getElementById('confirmModal').style.display = 'block';
+        }
+
+       function deleteConfirmed() {
+    const rowIndex = rowToDelete.rowIndex;
+    const inputs = rowToDelete.getElementsByTagName('input');
+    lastDeletedRow = {
+        index: rowIndex,
+        date: inputs[0].value,
+        time: inputs[1].value,
+        importance: inputs[2].value,
+        note: inputs[3].value,
+        deletedAt: new Date().getTime() // Silinme zamanını ekle
+    };
+
+    // Geri Dönüşüm Kutusu'na ekle
+    let recycleBinData = JSON.parse(localStorage.getItem('recycleBinData')) || [];
+    recycleBinData.push(lastDeletedRow);
+    localStorage.setItem('recycleBinData', JSON.stringify(recycleBinData));
+
+    rowToDelete.parentElement.removeChild(rowToDelete);
+    rowCount--;
+    updateRowNumbers();
+    hasChanges = true;
+    saveData();
+    showToast(`Sıra ${rowIndex} silindi. Olay: ${lastDeletedRow.importance}`, 'success');
+    document.getElementById('confirmModal').style.display = 'none';
+    showUndoToast();
+}
+
+
+
+        function cancelDelete() {
+            showToast(`Satır ${rowToDelete.rowIndex} silme işlemi iptal edildi.`, 'error');
+            document.getElementById('confirmModal').style.display = 'none';
+        }
+
+        function updateRowNumbers() {
+            const rows = document.getElementById('eventTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+            for (let i = 0; i < rows.length; i++) {
+                rows[i].getElementsByTagName('td')[0].textContent = i + 1;
+            }
+        }
+
+        function saveData() {
+            const rows = document.getElementById('eventTable').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+            const data = [];
+            for (let row of rows) {
+                const inputs = row.getElementsByTagName('input');
+                const rowData = {
+                    date: inputs[0].value,
+                    time: inputs[1].value,
+                    importance: inputs[2].value,
+                    note: inputs[3].value
+                };
+                data.push(rowData);
+            }
+            localStorage.setItem('eventData', JSON.stringify(data));
+            showToast('Veriler kaydedildi!', 'success');
+            hasChanges = false;
+        }
+
+        function loadData() {
+            const data = JSON.parse(localStorage.getItem('eventData'));
+            if (data) {
+                for (let rowData of data) {
+                    rowCount++;
+                    const table = document.getElementById('eventTable').getElementsByTagName('tbody')[0];
+                    const newRow = table.insertRow();
+                    newRow.className = rowCount % 2 === 0 ? 'row-light' : 'row-dark';
+                    newRow.innerHTML = `
+                        <td>${rowCount}</td>
+                        <td><input type="date" id="date${rowCount}" name="date${rowCount}" value="${rowData.date}" disabled></td>
+                        <td><input type="time" id="time${rowCount}" name="time${rowCount}" value="${rowData.time}" disabled></td>
+                        <td><input type="text" id="importance${rowCount}" name="importance${rowCount}" value="${rowData.importance}" class="resizable" disabled></td>
+                        <td><input type="text" id="note${rowCount}" name="note${rowCount}" value="${rowData.note}" class="resizable" disabled></td>
+                        <td>
+                            <button class="action-button edit-button" onclick="editRow(this)">Değiştir</button>
+                            <button class="action-button delete-button" onclick="confirmDelete(this)">Sil</button>
+                        </td>
+                    `;
+                }
+            }
+        }
+
+        window.onload = loadData;
+
+        window.onbeforeunload = function (e) {
+            if (isEditing) {
+                e.preventDefault();
+                e.returnValue = '';
+                showModal();
+                return '';
+            }
+        };
+
+        function showModal() {
+            document.getElementById('myModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('myModal').style.display = 'none';
+        }
+
+        function discardAndClose() {
+            isEditing = false;
+            closeModal();
+            window.onbeforeunload = null;
+            window.close();
+        }
+
+        function saveAndClose() {
+            saveData();
+            isEditing = false;
+            closeModal();
+            window.onbeforeunload = null;
+            window.close();
+        }
+
+        function returnToEdit() {
+            closeModal();
+        }
+
+        function showToast(message, type) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast show';
+            if (type === 'success') {
+                toast.style.backgroundColor = '#28a745';
+            } else if (type === 'error') {
+                toast.style.backgroundColor = '#dc3545';
+            }
+            setTimeout(() => {
+                toast.className = toast.className.replace('show', '');
+            }, 3000);
+        }
+
+       document.addEventListener('wheel', function(e) {
+    if (e.ctrlKey) {
+        e.preventDefault();
+    }
+}, { passive: false });
+
+document.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey && (e.key === '+' || e.key === '-')) || e.key === 'F11') {
+        e.preventDefault();
+    }
+});
+
+document.addEventListener('gesturestart', function(e) {
+    e.preventDefault();
+});
+
+document.addEventListener('gesturechange', function(e) {
+    e.preventDefault();
+});
+
+document.addEventListener('gestureend', function(e) {
+    e.preventDefault();
+});
+
+
+    </script>
+</body>
+</html>
